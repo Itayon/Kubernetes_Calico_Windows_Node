@@ -1,5 +1,4 @@
 # Kubernetes_Calico_Windows_Node
-
 Here's a tutorial to help you set up a windows node in a kubernetes cluster using calico.
 
 - the [linux-master](https://github.com/Itayon/Kubernetes_Calico_Windows_Node/tree/main/linux-master) directory provides a script for installing a kubernetes master.
