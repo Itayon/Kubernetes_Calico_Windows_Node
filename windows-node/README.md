@@ -55,7 +55,7 @@ scp masteruser@your.kubernetes.master.ip:.kube/config C:/k/config
 
 If you want to use another method to retrieve the configuration file, you can do so. The important thing is that the file is identical and in **C:/k**.
 ```powershell
-Invoke-WebRequest https://github.com/Itayon/Kubernetes_Calico_Windows_Node/windows-node/install-calico-windows.ps1 -OutFile c:\install-calico-windows.ps1
+Invoke-WebRequest https://github.com/Itayon/Kubernetes_Calico_Windows_Node/blob/main/windows-node/install-calico-windows.ps1 -OutFile c:\install-calico-windows.ps1
 C:\install-calico-windows.ps1 -KubeVersion 1.28.2 -ServiceCidr 10.96.0.0/12 -DNSServerIPs 10.96.0.10
 ```
 
@@ -133,14 +133,14 @@ we'll now launch the upgrade
 ## Launching a pod
 
 To check that the node is working, we're going to initialize a pod. 
-windows containers don't stay on once launched, so here's a [yaml file](/https://github.com/Itayon/Kubernetes_Calico_Windows_Node/windows-node/WinNanoServ.yaml) to keep the pod on.
+windows containers don't stay on once launched, so here's a [yaml file](https://github.com/Itayon/Kubernetes_Calico_Windows_Node/blob/main/windows-node/WinNanoServ.yaml) to keep the pod on.
 
 here are the steps to initialize it on the master:
 
 - get the yaml by copying or downloading it
 
 ```bash
-wget https://git.bu-dsa.si.c-s.fr/lbouakka/Kubernetes_calico_and_windows_node/src/branch/main/windows-node/WinNanoServ.yaml
+wget https://github.com/Itayon/Kubernetes_Calico_Windows_Node/blob/main/windows-node/WinNanoServ.yaml
 ```
 
 - We'll then launch it

@@ -21,4 +21,4 @@ mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 ```
-**For available commands and configuration files see [conf.md](https://github.com/Itayon/Kubernetes_Calico_Windows_Node/linux-master/conf.md)**.
+**For available commands and configuration files see [conf.md](https://github.com/Itayon/Kubernetes_Calico_Windows_Node/blob/main/linux-master/conf.md)**.
