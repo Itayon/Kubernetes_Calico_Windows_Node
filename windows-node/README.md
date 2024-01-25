@@ -129,10 +129,46 @@ we'll now launch the upgrade
 ./upgrade-service.ps1
 ```
 
+Choose the kubernetes version you want to upgrade to
+example command:
+powershell
+$kubeversion="1.29.2"
+```
+
+Get the new kubeadm version
+```powershell
+curl.exe -Lo c:\k\kubeadm.exe "https://cdn.dl.k8s.io/release/v$kubeversion/bin/windows/amd64/kubeadm.exe"
+```
+
+⚠️ On the master⚠️ drain of the node being updated
+```bash
+kubectl drain <node-a-drain> --ignore-daemonsets
+kubeadm upgrade node
+```
+
+On windows node, update kubelet and kube-proxy
+```powershell
+stop-service kubelet
+stop-service kube-proxy
+curl.exe -Lo c:\k\kubelet.exe "https://cdn.dl.k8s.io/release/v$kubeversion/bin/windows/amd64/kubelet.exe"
+curl.exe -Lo c:\k\kube-proxy.exe "https://cdn.dl.k8s.io/release/v$kubeversion/bin/windows/amd64/kube-proxy.exe"
+restart-service kubelet
+restart-service kube-proxy
+```
+
+⚠️ On master⚠️ bring back the node
+```
+kubectl uncordon <node-a-drain>
+```
+
+Finally, we restart the windows node
+```powershell
+Restart-Computer -force
+```
 -------------------------------------------------------------------------------------------------------------
 ## Launching a pod
 
-To check that the node is working, we're going to initialize a pod. 
+To check that the node is working, we're going to initialize a pod.
 windows containers don't stay on once launched, so here's a [yaml file](https://github.com/Itayon/Kubernetes_Calico_Windows_Node/blob/main/windows-node/WinNanoServ.yaml) to keep the pod on.
 
 here are the steps to initialize it on the master:
