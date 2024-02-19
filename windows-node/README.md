@@ -55,7 +55,7 @@ scp masteruser@your.kubernetes.master.ip:.kube/config C:/k/config
 
 If you want to use another method to retrieve the configuration file, you can do so. The important thing is that the file is identical and in **C:/k**.
 ```powershell
-Invoke-WebRequest https://github.com/Itayon/Kubernetes_Calico_Windows_Node/blob/main/windows-node/install-calico-windows.ps1 -OutFile c:\install-calico-windows.ps1
+Invoke-WebRequest https://github.com/projectcalico/calico/releases/download/v3.27.2/install-calico-windows.ps1 -OutFile c:\install-calico-windows.ps1
 C:\install-calico-windows.ps1 -KubeVersion 1.28.2 -ServiceCidr 10.96.0.0/12 -DNSServerIPs 10.96.0.10
 ```
 
