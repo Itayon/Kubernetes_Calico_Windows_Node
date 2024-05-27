@@ -10,7 +10,7 @@ Pour utiliser Ansible, il y a quelques prérequis à mettre en place sur Windows
 
 Windows a besoin d'utiliser winrm pour fonctionner on peut soit utiliser un certificat signer ou auto-signer Voici un script a lancer dans powershell pour activer winrm
 
-le script est ici [Winrm_config.ps1](https://git.bu-dsa.si.c-s.fr/lbouakka/Kubernetes_calico_and_windows_node/src/branch/main/windows-node/Deploiment_Ansible/Winrm_config.ps1)
+le script est ici [Winrm_config.ps1](https://github.com/Itayon/Kubernetes_Calico_Windows_Node/blob/main/windows-node/Deploiment_Ansible/Winrm_config.ps1)
 
 ## Configurer Linux
 Ansible fonctionnera globalement comme sur linux, à quelque exceptions prêt voici a quoi doit ressembler la configuration ```/etc/ansible/host``` pour un hote windows:
@@ -32,9 +32,9 @@ ansible_winrm_server_cert_validation=ignore
 
 une fois configuré on peu tester la connexion avec : ``` ansible nom_de_la_node -m win_ping ```
 
-## Utliser le [Script ansible](https://git.bu-dsa.si.c-s.fr/lbouakka/Kubernetes_calico_and_windows_node/src/branch/main/windows-node/playbook.yml)
+## Utliser le [Script ansible](https://github.com/Itayon/Kubernetes_Calico_Windows_Node/blob/main/windows-node/Deploiment_Ansible/playbook.yml)
 
-Pour utiliser le [script](https://git.bu-dsa.si.c-s.fr/lbouakka/Kubernetes_calico_and_windows_node/src/branch/main/windows-node/Deploiment_Ansible/playbook.yml), c'est simple : il suffit de le lancer avec ```ansible-playbook playbook.yml```.
+Pour utiliser le [script](https://github.com/Itayon/Kubernetes_Calico_Windows_Node/blob/main/windows-node/Deploiment_Ansible/playbook.yml), c'est simple : il suffit de le lancer avec ```ansible-playbook playbook.yml```.
 
 Il y a deux hosts a configurer un pour windows et un pour le cluster kubernetes, il sert a récupérer le fichier **kubeconfig**
 
