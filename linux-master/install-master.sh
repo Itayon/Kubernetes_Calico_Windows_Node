@@ -49,13 +49,13 @@ sudo dnf install -y kubelet kubeadm kubectl
 sudo hostnamectl set-hostname "master-node"
 sudo exec bash
 
-echo 'disable swap'
+echo 'désactivation de swap'
 sudo swapoff -a
 sudo swapoff -a; sed -i '/swap/d' /etc/fstab
 
 systemctl enable kubelet
 
-echo 'disable firewall'
+echo 'désactivation du firewall'
 sudo systemctl disable firewalld
 sudo systemctl stop firewalld
 
@@ -67,7 +67,7 @@ kubeadm config images pull
 break
 ;;
         d)
-echo "comming soon"
+echo "pas encore implémenter"
 break
 ;;
         *)

@@ -1,21 +1,27 @@
-## Preparing and installing the Windows node
+## Préparation et installation de la node Windows
 
-To implement a Windows node, you need to use a Windows server.
+Pour l'implémentation d'une node Windows, il faut obligatoirement utiliser un serveur Windows.
 
-### Preparing the master
+### Préparer le master
 
-On the master server, we'll initialize pods to enable implementation of a Windows node.
-
+Sur le serveur master, on va initialiser des pods pour permettre l'implémentation d'une node Windows. 
 ```bash
 kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.24.4/manifests/tigera-operator.yaml
 kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.24.4/manifests/custom-resources.yaml
 kubectl patch ipamconfigurations default --type merge --patch='{"spec": {"strictAffinity": true}}'kubectl patch installation default --type=merge -p '{"spec": {"calicoNetwork": {"bgp": "Disabled"}}}'
 ```
+## Installation avec Ansible
 
-### Windows node installation
+Pour installer la node avec ansible voici un guide pour utliser ansible et windows et le script ansible. 
+- [Utiliser ansible et windows](https://git.bu-dsa.si.c-s.fr/lbouakka/Kubernetes_calico_and_windows_node/src/branch/main/windows-node/UseAnsible.md)
+- [script ansible](https://git.bu-dsa.si.c-s.fr/lbouakka/Kubernetes_calico_and_windows_node/src/branch/main/windows-node/autoconfigwindowsnode.yml)
 
-#### Preparing the windows server
 
+
+
+## Installation a la main
+
+#### Préparer le serveur windows
 ```powershell
 Install-WindowsFeature Containers
 Install-WindowsFeature Hyper-V
@@ -25,7 +31,7 @@ Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
 
 Restart-Computer -force
 ```
-#### Containerd installation
+#### Installation containerd
 ```Powershell
 $Version="1.6.9"
 curl.exe -L https://github.com/containerd/containerd/releases/download/v$Version/containerd-$Version-windows-amd64.tar.gz -o containerd-windows-amd64.tar.gz
@@ -40,28 +46,28 @@ Get-Content config.toml
 .\containerd.exe --register-service
 Start-Service containerd
 ```
-#### Installing calico
 
-Create the **C:\k** directory and install Calico.
+#### Installation de calico
 
+Création du répertoire **C:\k** et installation de Calico.
 ```Powershell
 mkdir c:\k
 ```
 
-Before installing Calico, we'll retrieve the Kubernetes config file from the master.
+Avant d'installer Calico, on va récupérer le fichier config de Kubernetes du master.
 ```Powershell
-scp masteruser@your.kubernetes.master.ip:.kube/config C:/k/config
+scp utilisateurmaster@adresse.ip.du.master:.kube/config C:/k/config
 ```
 
-If you want to use another method to retrieve the configuration file, you can do so. The important thing is that the file is identical and in **C:/k**.
+Si vous voulez utiliser une autre méthode pour récupérer le fichier de configuration, vous pouvez le faire. L'essentiel est que le fichier soit identique et dans **C:/k**.
 ```powershell
 Invoke-WebRequest https://github.com/projectcalico/calico/releases/download/v3.27.2/install-calico-windows.ps1 -OutFile c:\install-calico-windows.ps1
 C:\install-calico-windows.ps1 -KubeVersion 1.28.2 -ServiceCidr 10.96.0.0/12 -DNSServerIPs 10.96.0.10
 ```
 
-Check that Calico and Kubernetes have the correct CNI.
+Vérifier que Calico et Kubernetes ont bien le bon CNI.
 
-The Calico configuration should look like this:
+La configuration de Calico doit ressembler à cela :
 
 **c:/calicowindows/config.ps1**
 ```powershell
@@ -78,7 +84,7 @@ if (Get-IsContainerdRunning)
     Set-EnvVarIfNotSet -var "CNI_CONF_DIR" -defaultValue "c:\k\cni\config"
 ```
 
-the kubernetes configuration file should look like this:
+le fichier de configuration kubernetes doit ressembler à cela:
 **C:\CalicoWindows\kubernetes\kubelet-service.ps1**
 ```powershell
     # These params are only applicable for the docker container runtime.
@@ -90,10 +96,10 @@ the kubernetes configuration file should look like this:
     $argList += "--image-pull-progress-deadline=20m"
 ```
 
-### last config and startup
+### dernière config et démarrage
 
-we'll check the containerd cni **C:\Program Files\containerd\config.toml**.
-the file should look like this:
+on va vérifier le cni de containerd **C:\Program Files\containerd\config.toml**
+le fichier doit ressembler à cela:
 ```powershell
     [plugins."io.containerd.grpc.v1.cri".cni]
       bin_dir = "C:\\k\\cni"
@@ -102,51 +108,51 @@ the file should look like this:
       ip_pref = ""
       max_conf_num = 1
 ```
-The main thing is that all three services have the same CNI configuration, no matter where you do it.
 
--Next, we'll reboot (very important, and change the name of your machine if you haven't already) one last time, then run the script ``C:\CalicoWindows\install-calico.ps1``.
+Le principal est que les trois services aient la même configuration CNI, peu importe où vous la faites.
 
--Once the script has been initialized, we'll run the file ``C:\CalicoWindows\kubernetes\install-kube-services.ps1``.
+-Ensuite, on va redémarrer (très important, et changer le nom de votre machine si ce n'est pas déjà fait) une dernière fois, puis démarrer le script ```C:\CalicoWindows\install-calico.ps1```.
 
-### If all the configuration has gone smoothly, the node should display "Ready" in a few minutes on the master.
+-Une fois le script initialisé, on va exécuter le fichier ```C:\CalicoWindows\kubernetes\install-kube-services.ps1```.
+
+### **Si toute la configuration s'est bien passée, la node devrait s'afficher en "Ready" d'ici une petite minute sur le master.**
 
 -------------------------------------------------------------------------------------------------------------
 
-## Windows node update
+## Mise a jour de la node windows
 
-To update the node, move the update file to the current calico directory
-powershell
-cp C:\CalicoWindows\upgrade-service.ps1 C:\CalicoWindows\upgrade-service.ps1
+Pour mettre a jour la node il faut déplacer le fichier d'update dans le répèrtoir courant de calico
+```powershell
+cp C:\CalicoWindows\upgrade\upgrade-service.ps1 C:\CalicoWindows\upgrade-service.ps1
 ```
 
-we will then copy the kube config file for use in the current calico directory
+On va ensuite copier le fichier kube config pour l'utiliser dans le répèrtoir courant de calico
 ```powershell
 cp C:\k\config C:\CalicoWindows\calico-kube-config
 ```
 
-we'll now launch the upgrade
+On va mainteant lancer l'upgrade
 ```powershell
 ./upgrade-service.ps1
 ```
-
-Choose the kubernetes version you want to upgrade to
-example command:
-powershell
+Choisir la version de kubernetes vers leqeul on veut upgrade
+exemple de commande:
+```powershell
 $kubeversion="1.29.2"
 ```
 
-Get the new kubeadm version
+Récuperer la nouvelle version de kubeadm
 ```powershell
-curl.exe -Lo c:\k\kubeadm.exe "https://cdn.dl.k8s.io/release/v$kubeversion/bin/windows/amd64/kubeadm.exe"
+curl.exe -Lo c:\k\kubeadm.exe  "https://cdn.dl.k8s.io/release/v$kubeversion/bin/windows/amd64/kubeadm.exe"
 ```
 
-⚠️ On the master⚠️ drain of the node being updated
+⚠️ Sur le master⚠️  drain la node qu'on met a jour
 ```bash
 kubectl drain <node-a-drain> --ignore-daemonsets
 kubeadm upgrade node
 ```
 
-On windows node, update kubelet and kube-proxy
+Sur la node windows mettre a jour kubelet et kube-proxy
 ```powershell
 stop-service kubelet
 stop-service kube-proxy
@@ -156,44 +162,46 @@ restart-service kubelet
 restart-service kube-proxy
 ```
 
-⚠️ On master⚠️ bring back the node
+⚠️ Sur le master⚠️  on ramène le noeud
 ```
 kubectl uncordon <node-a-drain>
 ```
 
-Finally, we restart the windows node
+Enfin on redémarre la node windows
 ```powershell
 Restart-Computer -force
 ```
 -------------------------------------------------------------------------------------------------------------
-## Launching a pod
 
-To check that the node is working, we're going to initialize a pod.
-windows containers don't stay on once launched, so here's a [yaml file](https://github.com/Itayon/Kubernetes_Calico_Windows_Node/blob/main/windows-node/WinNanoServ.yaml) to keep the pod on.
+## Lancement d'un pods
 
-here are the steps to initialize it on the master:
+Pour vérifier que la node fonctionne on va initialiser un pods.
+les conteneur windows ne reste pas allumer un fois lancer voici donc un [fichier yaml](https://git.bu-dsa.si.c-s.fr/lbouakka/Kubernetes_calico_and_windows_node/src/branch/main/windows-node/WinNanoServ.yaml) permettant de garder la pods allumer.
 
-- get the yaml by copying or downloading it
+voici les étape pour l'initialiser sur le master:
 
+- récupérer le yaml en le copiant ou en le téléchargant
 ```bash
-wget https://github.com/Itayon/Kubernetes_Calico_Windows_Node/blob/main/windows-node/WinNanoServ.yaml
+wget https://git.bu-dsa.si.c-s.fr/lbouakka/Kubernetes_calico_and_windows_node/src/branch/main/windows-node/WinNanoServ.yaml
 ```
 
-- We'll then launch it
+- On va ensuite le lancer
 ```bash
 kubectl apply -f WinNanoServ.yaml
 ```
 
-- To check pod status, run the command
+- Pour vérifier l'états du pods on peu executer la commande
 ```bash
 kubectl get pods -o wide -w
 ```
-- If the pod doesn't work you can display the pod information with
+
+- Si le pods ne fonctionne pas vous pouvez afficher les inforation du pods avec
 ```bash
-kubectl describe pods/podname
+kubectl describe pods/nomdupods
 ```
-example
+exemple
 ```bash
 kubectl describe pods/win-1494aeff45
 ```
+
 

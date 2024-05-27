@@ -1,24 +1,24 @@
-## Scripts for installing kubernetes on a CentOS master server
+## Scripts pour installer kubernetes sur un serveur master CentOS
 
-This directory contains a script to run called ``install-master.sh``.
+Ce répertoir contient un  scripts a lancer nommer ```install-master.sh```
 
-The role of this script is to install addons for kubernetes as well as containerd
+Le role de ce script est d'installer des addons pour kubernetes  de l'installer ansi que containerd
 
-At the end of the script, the machine will reboot.
+A la fin du script la machine va redémarrer
 
-On reconnection, kubernetes will be launched
-This is the command ```kubeadm init --pod-network-cidr=192.168.0.0/16 --apiserver-advertise-address=your.kubernetes.master.ip```
+A la reconnexion on va lancer kubernetes
+voici la commande ```kubeadm init --pod-network-cidr=192.168.0.0/16 --apiserver-advertise-address=l'adresse.ip.de.cette-machinne```
 
-example in our case ```kubeadm init --pod-network-cidr=192.168.0.0/16 --apiserver-advertise-address=192.168.100.20```
-
-
-The command will provide us with another command to connect nodes. If you lose the command, you can retrieve it again with  ```kubeadm token create --print-join-command```
+Exemple dans notre cas ```kubeadm init --pod-network-cidr=192.168.0.0/16 --apiserver-advertise-address=192.168.100.20```
 
 
-The commands below are to be executed after the kubeadm init. they validate the kubernetes configuration and allow the user to access kubernetes.
+La commande va nous fournir une autre commande permettant de connecter des nodes si vous perdres la commande vous pouvez la récupérez a nouveau avec ```kubeadm token create --print-join-command```
+
+Les commandes ci dessous sont a executer aprés le kubeadm init. elle a valider la configuration de kubernetes et de permettre a l'utilisateur d'avoir accés a kubernetes
+
 ```bash
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 ```
-**For available commands and configuration files see [conf.md](https://github.com/Itayon/Kubernetes_Calico_Windows_Node/blob/main/linux-master/conf.md)**.
+**Pour les commandes disponible et les fichier de configuration consulter conf.md**

@@ -1,31 +1,31 @@
-## Different configuration information
+## Différente information de config
 
-### Conf file localization
+### Localisation fichier de conf
 
-### Commande
+### Commande utile
 
-- View nodes available on the cluster
+- Voir les nodes disponible sur le cluster
 ```bash
 kubectl get nodes
 ```
 
-- View pods available on the cluster
+- Voir les pods disponible sur le cluster
 ```bash
 kubectl get pods
 ```
 
-- Pod and node information
+- Connaitre les information d'une pods ou d'une nodes
 ```bash
-kubectl describle pods/(pod name)
-kubectl describle node/(node name)
+kubectl describle pods/(nom de la pods)
+kubectl describle node/(nom de la node)
 ```
 
-- Launching a pod from a yaml file
+- Lancer un pods depuis un fichier yaml
 ```bash
-kubectl apply -f (file name).yaml
+kubectl apply -f (nom du fichier).yaml
 ```
 
-- View all pods available on the cluster
+- Voir toute les pods disponible sur le cluster
 ```bash
 kubectl get pods --all-namespaces
 ```
