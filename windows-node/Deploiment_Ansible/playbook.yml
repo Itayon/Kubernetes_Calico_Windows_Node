@@ -1,0 +1,13 @@
+---
+- name : Recupération kube config
+  hosts: kubemaster
+  become: true
+  roles:
+    - { role: role/get_kubeconfig}
+
+
+- name: Installation nœud windows
+  hosts: win
+  strategy: free
+  roles:
+    - { role: role/install_noeud_win}

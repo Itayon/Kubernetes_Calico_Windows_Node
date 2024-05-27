@@ -1,0 +1,18 @@
+    - name: Deploiement du fichier Kubeconfig
+      win_copy:
+        src: /tmp/kubeconfig
+        dest: c:/k/config
+
+    - name: Telechargement calico/Kubernetes
+      win_command: powershell.exe wget https://github.com/projectcalico/calico/releases/download/v{{calico_version}}/install-calico-windows.ps1 -OutFile c:/install-calico-windows.ps1
+
+    - name: Installation calico/kubernetes
+      win_command: powershell.exe c:/install-calico-windows.ps1 -KubeVersion {{kubernetes_version}} -Datastore kubernetes
+      ignore_unreachable: True
+      ignore_errors: True
+      timeout: 260
+
+    - name: Detection fin d'installation
+      wait_for_connection:
+         delay: 90
+         timeout: 360

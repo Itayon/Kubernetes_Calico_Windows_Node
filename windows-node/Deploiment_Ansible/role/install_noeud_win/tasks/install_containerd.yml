@@ -1,0 +1,17 @@
+
+    - name: Telechargmement containerd
+      win_command: powershell.exe Invoke-WebRequest https://raw.githubusercontent.com/kubernetes-sigs/sig-windows-tools/master/hostprocess/Install-Containerd.ps1 -OutFile c:\Install-Containerd.ps1
+
+    - name: Installation containerd
+      win_command: powershell.exe c:\Install-Containerd.ps1 -ContainerDVersion {{containerd_version}} -CNIConfigPath "c:/k/cni/config" -CNIBinPath "c:/k/cni/"
+
+    - name: Detection fin d'installation
+      wait_for_connection:
+         delay: 20
+         timeout: 360
+
+    - name: Configuration de containerd pour allumage Automatique
+      win_command: powershell.exe Set-Service containerd -StartupType Automatic 
+
+    - name: Allumage Containerd
+      win_command: Powershell.exe Start-Service containerd

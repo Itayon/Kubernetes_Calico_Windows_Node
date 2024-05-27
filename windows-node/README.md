@@ -13,10 +13,9 @@ kubectl patch ipamconfigurations default --type merge --patch='{"spec": {"strict
 ## Installation avec Ansible
 
 Pour installer la node avec ansible voici un guide pour utliser ansible et windows et le script ansible. 
-- [Utiliser ansible et windows](https://git.bu-dsa.si.c-s.fr/lbouakka/Kubernetes_calico_and_windows_node/src/branch/main/windows-node/UseAnsible.md)
-- [script ansible](https://git.bu-dsa.si.c-s.fr/lbouakka/Kubernetes_calico_and_windows_node/src/branch/main/windows-node/autoconfigwindowsnode.yml)
-
-
+- [repertoir ansible](https://git.bu-dsa.si.c-s.fr/lbouakka/Kubernetes_calico_and_windows_node/src/branch/main/windows-node/Deploiment_Ansible)
+- [Utiliser ansible et windows](https://git.bu-dsa.si.c-s.fr/lbouakka/Kubernetes_calico_and_windows_node/src/branch/main/windows-node/Deploiment_Ansible/README.md)
+- [script ansible](https://git.bu-dsa.si.c-s.fr/lbouakka/Kubernetes_calico_and_windows_node/src/branch/main/windows-node/Deploiment_Ansible/playbook.yml)
 
 
 ## Installation a la main
@@ -182,12 +181,12 @@ voici les étape pour l'initialiser sur le master:
 
 - récupérer le yaml en le copiant ou en le téléchargant
 ```bash
-wget https://git.bu-dsa.si.c-s.fr/lbouakka/Kubernetes_calico_and_windows_node/src/branch/main/windows-node/WinNanoServ.yaml
+wget https://git.bu-dsa.si.c-s.fr/lbouakka/Kubernetes_calico_and_windows_node/src/branch/main/windows-node/Pods/Nano_server_image.yaml
 ```
 
 - On va ensuite le lancer
 ```bash
-kubectl apply -f WinNanoServ.yaml
+kubectl apply -f Nano_server_image.yaml
 ```
 
 - Pour vérifier l'états du pods on peu executer la commande
@@ -203,5 +202,10 @@ exemple
 ```bash
 kubectl describe pods/win-1494aeff45
 ```
+- Pour supprimer le pods
+```bash
+kubectl delete -f Nano_server_image.yaml
+```
+
 
 

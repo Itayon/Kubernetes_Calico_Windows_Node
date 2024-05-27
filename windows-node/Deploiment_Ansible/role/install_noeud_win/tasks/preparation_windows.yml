@@ -1,0 +1,33 @@
+    - name: Preparation pour containerd
+      win_command: powershell.exe Install-WindowsFeature Containers
+
+    - name: Preparation de Hyper-V    
+      win_command: powershell.exe Install-WindowsFeature Hyper-V
+
+    - name: Preparation de Hyper-V Powershell
+      win_command: powershell.exe Install-WindowsFeature Hyper-V-Powershell
+
+    - name: Configuration des règles de firewall
+      win_command: powershell.exe Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
+
+    - name: Reboot
+      win_command: powershell.exe Restart-Computer -force
+
+  
+    - name: detection de fin de reboot
+      wait_for_connection:
+        delay: 45
+        timeout: 2000
+
+    - name: Creation du répertoire de travail de kubernetes
+      win_command: powershell.exe mkdir c:/k
+
+    - name: Creation du répertoir cni
+      win_command: powershell.exe mkdir cni
+
+    - name: Creation de répertoir cni/bin
+      win_command: powershell.exe mkdir cni/bin
+
+    - name: Creation de répertoir bin cni/conf
+      win_command: powershell.exe mkdir cni/conf
+   

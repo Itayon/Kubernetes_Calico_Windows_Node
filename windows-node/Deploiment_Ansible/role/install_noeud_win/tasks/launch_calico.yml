@@ -1,0 +1,24 @@
+
+    - name: Remplacement bin_dir de calico
+      win_lineinfile:
+        path: "C:/CalicoWindows/config.ps1"
+        regexp: 'ContainerdCniBinDir'
+        line: '    Set-EnvVarIfNotSet -var "CNI_BIN_DIR" -defaultValue "c:\k\cni\"'
+
+    - name: Remplacement conf_dir de calico
+      win_lineinfile:
+        path: "C:/CalicoWindows/config.ps1"
+        regexp: 'ContainerdCniConfDir'
+        line: '    Set-EnvVarIfNotSet -var "CNI_CONF_DIR" -defaultValue "c:\k\cni\config"'
+
+
+    - name: Demarrage calico
+      win_command: powershell.exe c:/CalicoWindows/install-calico.ps1
+  
+    - name: Demarrage kubernetes
+      win_command: powershell.exe C:/CalicoWindows/kubernetes/install-kube-services.ps1
+
+
+    - name: Reboot
+      win_command: powershell.exe Restart-Computer -force
+      ignore_errors: True

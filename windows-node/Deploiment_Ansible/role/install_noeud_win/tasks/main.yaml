@@ -1,0 +1,11 @@
+- name: preparation de windows
+  import_tasks: preparation_windows.yml
+
+- name: Installation containerd
+  import_tasks: install_containerd.yml
+
+- name: Installation calico
+  import_tasks: install_calico.yml
+
+- name: Fin des configurations et lancement
+  import_tasks: launch_calico.yml

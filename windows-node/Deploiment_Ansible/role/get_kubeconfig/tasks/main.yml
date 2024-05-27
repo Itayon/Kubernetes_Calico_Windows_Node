@@ -1,0 +1,2 @@
+- name: récupération fichier kubeconfig
+  import_tasks: get_kubeconfig.yml
